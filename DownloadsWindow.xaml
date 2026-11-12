@@ -1,0 +1,179 @@
+<Window x:Class="Apolion.DownloadsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Downloads — Apolion" Height="480" Width="520"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResize" MinHeight="300" MinWidth="400"
+        WindowStyle="None"
+        Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}" Icon="apolion.ico">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="6"
+                      UseAeroCaptionButtons="False"
+                      GlassFrameThickness="0"
+                      NonClientFrameEdges="None"/>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary x:Key="LightTheme">
+                <Color x:Key="BackgroundColor">#FFFFFFFF</Color>
+                <Color x:Key="ForegroundColor">#FF000000</Color>
+                <Color x:Key="TitleBarColor">#FFF0F0F0</Color>
+                <Color x:Key="TitleBarBorderColor">#FFCCCCCC</Color>
+                <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+                <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
+                <SolidColorBrush x:Key="SecondaryTextBrush" Color="#FF888888" />
+                <SolidColorBrush x:Key="TitleBarBrush" Color="{StaticResource TitleBarColor}" />
+                <SolidColorBrush x:Key="TitleBarBorderBrush" Color="{StaticResource TitleBarBorderColor}" />
+                <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#FFADD8E6" />
+                <SolidColorBrush x:Key="ButtonHoverBrush" Color="#FF87CEEB" />
+                <SolidColorBrush x:Key="ButtonPressedBrush" Color="#FF00BFFF" />
+                <SolidColorBrush x:Key="CaptionBtnHover" Color="#22000000"/>
+                <SolidColorBrush x:Key="CaptionBtnPressed" Color="#44000000"/>
+                <SolidColorBrush x:Key="ListHoverBrush" Color="#FFE8E8EA"/>
+                <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="#FFE5E5E5"/>
+                <SolidColorBrush x:Key="ProgressBarFillBrush" Color="#FF00BFFF"/>
+            </ResourceDictionary>
+            <ResourceDictionary x:Key="DarkTheme">
+                <Color x:Key="BackgroundColor">#FF0D1117</Color>
+                <Color x:Key="ForegroundColor">#FFE6EDF3</Color>
+                <Color x:Key="TitleBarColor">#FF090D12</Color>
+                <Color x:Key="TitleBarBorderColor">#FF1E2738</Color>
+                <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+                <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
+                <SolidColorBrush x:Key="SecondaryTextBrush" Color="#FF7D8BA6" />
+                <SolidColorBrush x:Key="TitleBarBrush" Color="{StaticResource TitleBarColor}" />
+                <SolidColorBrush x:Key="TitleBarBorderBrush" Color="{StaticResource TitleBarBorderColor}" />
+                <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#FF161B27" />
+                <SolidColorBrush x:Key="ButtonHoverBrush" Color="#FF1F2A40" />
+                <SolidColorBrush x:Key="ButtonPressedBrush" Color="#FF253350" />
+                <SolidColorBrush x:Key="CaptionBtnHover" Color="#22AACCFF"/>
+                <SolidColorBrush x:Key="CaptionBtnPressed" Color="#44AACCFF"/>
+                <SolidColorBrush x:Key="ListHoverBrush" Color="#FF1C1C1E"/>
+                <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="#FF3A3A3C"/>
+                <SolidColorBrush x:Key="ProgressBarFillBrush" Color="#FF388BFD"/>
+            </ResourceDictionary>
+
+            <Style x:Key="CaptionButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="46"/>
+                <Setter Property="Height" Value="36"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource CaptionBtnHover}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource CaptionBtnPressed}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#FFE81123"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#FFC7001A"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border BorderBrush="{DynamicResource TitleBarBorderBrush}" BorderThickness="1">
+        <Grid Background="{DynamicResource BackgroundBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36"/> <!-- Title Bar -->
+                <RowDefinition Height="50"/> <!-- Header -->
+                <RowDefinition Height="*"/>  <!-- Content -->
+            </Grid.RowDefinitions>
+
+            <!-- Custom Title Bar -->
+            <Grid x:Name="TitleBarGrid" Grid.Row="0" Background="{DynamicResource TitleBarBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <Image Source="apolion.ico" Width="18" Height="18" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="Downloads — Apolion" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource ForegroundBrush}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="BtnMinimize" Style="{StaticResource CaptionButtonStyle}" Content="&#xE921;" ToolTip="Minimize" Click="BtnMinimize_Click"/>
+                    <Button x:Name="BtnMaximize" Style="{StaticResource CaptionButtonStyle}" Content="&#xE922;" ToolTip="Maximize" Click="BtnMaximize_Click"/>
+                    <Button x:Name="BtnClose" Style="{StaticResource CloseButtonStyle}" Content="&#xE8BB;" ToolTip="Close" Click="BtnClose_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Header bar -->
+            <Border Grid.Row="1" Background="{DynamicResource TitleBarBrush}" BorderBrush="{DynamicResource TitleBarBorderBrush}" BorderThickness="0,0,0,1">
+                <Grid Margin="16,0">
+                    <TextBlock Text="Downloads" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource ForegroundBrush}"/>
+                    <Button x:Name="BtnClearDone" Content="Clear finished" HorizontalAlignment="Right" Height="28" Padding="12,0" FontSize="12"
+                            Background="{DynamicResource ButtonBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}" BorderThickness="0" Cursor="Hand" Click="BtnClearDone_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Download list -->
+            <Grid Grid.Row="2">
+                <TextBlock x:Name="NoDownloadsText" Text="No downloads yet." VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="14" Visibility="Visible"/>
+                <ListBox x:Name="DownloadsList" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="12,8">
+                    <ListBox.Resources>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Margin="0,0,0,4" Padding="10,6">
+                                            <ContentPresenter/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ListHoverBrush}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.Resources>
+                </ListBox>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
+
+

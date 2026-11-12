@@ -1,0 +1,617 @@
+<Window x:Class="Apolion.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Apolion"
+        Height="720" Width="1280"
+        MinHeight="400" MinWidth="600"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Icon="apolion.ico">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="6"
+                      UseAeroCaptionButtons="False"
+                      GlassFrameThickness="0"
+                      NonClientFrameEdges="None"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary x:Key="LightTheme">
+                <Color x:Key="BackgroundColor">#FFFFFFFF</Color>
+                <Color x:Key="ForegroundColor">#FF000000</Color>
+                <Color x:Key="TitleBarColor">#FFF0F0F0</Color>
+                <Color x:Key="TitleBarBorderColor">#FFCCCCCC</Color>
+                <SolidColorBrush x:Key="BackgroundBrush"   Color="{StaticResource BackgroundColor}" />
+                <SolidColorBrush x:Key="ForegroundBrush"   Color="{StaticResource ForegroundColor}" />
+                <SolidColorBrush x:Key="TitleBarBrush"     Color="{StaticResource TitleBarColor}" />
+                <SolidColorBrush x:Key="TitleBarBorderBrush" Color="{StaticResource TitleBarBorderColor}" />
+                <SolidColorBrush x:Key="ButtonBackground"  Color="#FFADD8E6"/>
+                <SolidColorBrush x:Key="ButtonHover"       Color="#FF87CEEB"/>
+                <SolidColorBrush x:Key="ButtonPressed"     Color="#FF00BFFF"/>
+                <SolidColorBrush x:Key="CaptionBtnHover"   Color="#22000000"/>
+                <SolidColorBrush x:Key="CaptionBtnPressed" Color="#44000000"/>
+                <SolidColorBrush x:Key="AddressBarBackground" Color="#FFE8E8E8"/>
+                <SolidColorBrush x:Key="SettingsPopupBackground" Color="#FFF5F5F7"/>
+                <SolidColorBrush x:Key="SettingsPopupBorder" Color="#FFCCCCCC"/>
+                <SolidColorBrush x:Key="SettingsTextForeground" Color="#FF333333"/>
+                <SolidColorBrush x:Key="SettingsTextMuted" Color="#FF888888"/>
+                <SolidColorBrush x:Key="SettingsListBackground" Color="#FFFFFFFF"/>
+                <SolidColorBrush x:Key="SettingsListHover" Color="#FFE8E8EA"/>
+            </ResourceDictionary>
+            <ResourceDictionary x:Key="DarkTheme">
+                <Color x:Key="BackgroundColor">#FF0D1117</Color>
+                <Color x:Key="ForegroundColor">#FFE6EDF3</Color>
+                <Color x:Key="TitleBarColor">#FF090D12</Color>
+                <Color x:Key="TitleBarBorderColor">#FF1E2738</Color>
+                <SolidColorBrush x:Key="BackgroundBrush"   Color="{StaticResource BackgroundColor}" />
+                <SolidColorBrush x:Key="ForegroundBrush"   Color="{StaticResource ForegroundColor}" />
+                <SolidColorBrush x:Key="TitleBarBrush"     Color="{StaticResource TitleBarColor}" />
+                <SolidColorBrush x:Key="TitleBarBorderBrush" Color="{StaticResource TitleBarBorderColor}" />
+                <SolidColorBrush x:Key="ButtonBackground"  Color="#FF161B27"/>
+                <SolidColorBrush x:Key="ButtonHover"       Color="#FF1F2A40"/>
+                <SolidColorBrush x:Key="ButtonPressed"     Color="#FF253350"/>
+                <SolidColorBrush x:Key="CaptionBtnHover"   Color="#22AACCFF"/>
+                <SolidColorBrush x:Key="CaptionBtnPressed" Color="#44AACCFF"/>
+                <SolidColorBrush x:Key="AddressBarBackground" Color="#FF131A24"/>
+                <SolidColorBrush x:Key="SettingsPopupBackground" Color="#FF0D1117"/>
+                <SolidColorBrush x:Key="SettingsPopupBorder" Color="#FF1E2738"/>
+                <SolidColorBrush x:Key="SettingsTextForeground" Color="#FFE6EDF3"/>
+                <SolidColorBrush x:Key="SettingsTextMuted" Color="#FF7D8BA6"/>
+                <SolidColorBrush x:Key="SettingsListBackground" Color="#FF1C1C1E"/>
+                <SolidColorBrush x:Key="SettingsListHover" Color="#FF3A3A3C"/>
+            </ResourceDictionary>
+
+            <!-- Navigation button style -->
+            <Style x:Key="NavButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="10,5"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonHover}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonPressed}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}"/>
+
+            <!-- Caption (title bar) button base style -->
+            <Style x:Key="CaptionButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="46"/>
+                <Setter Property="Height" Value="36"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource CaptionBtnHover}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource CaptionBtnPressed}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Close button — red hover -->
+            <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#FFE81123"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#FFC7001A"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                </Style.Triggers>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Tab style -->
+            <Style TargetType="TabItem">
+                <Setter Property="MinWidth" Value="36"/>
+                <Setter Property="MaxWidth" Value="220"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TabItem">
+                            <Border x:Name="Border" Padding="6,4" Margin="0,0,2,0"
+                                    Background="{DynamicResource ButtonBackground}"
+                                    CornerRadius="6,6,0,0">
+                                <ContentPresenter x:Name="ContentSite"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Stretch"
+                                                  ContentSource="Header"
+                                                  Margin="2,1"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonPressed}"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonHover}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            </Style>
+
+            <!-- ─── Settings popup styles (always dark, independent of window theme) ─── -->
+
+            <!-- Pill-shaped on/off toggle (used for Dev Tools) -->
+            <Style x:Key="PillToggleStyle" TargetType="ToggleButton">
+                <Setter Property="Width" Value="44"/>
+                <Setter Property="Height" Value="24"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Grid>
+                                <Border x:Name="Track" CornerRadius="12" Background="#3A3A3C"/>
+                                <Border x:Name="Thumb" Width="20" Height="20" CornerRadius="10"
+                                        Background="White" HorizontalAlignment="Left"
+                                        VerticalAlignment="Center" Margin="2,0"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Track" Property="Background" Value="#30D158"/>
+                                    <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter TargetName="Thumb" Property="Margin" Value="0,0,2,0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Theme segment button (unselected) -->
+            <Style x:Key="ThemeSegBtnStyle" TargetType="Button">
+                <Setter Property="Background" Value="#2D2D2F"/>
+                <Setter Property="Foreground" Value="#AEAEB2"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Height" Value="28"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#3A3A3C"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#48484A"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Theme segment button (selected / active) -->
+            <Style x:Key="ThemeSegBtnActiveStyle" TargetType="Button" BasedOn="{StaticResource ThemeSegBtnStyle}">
+                <Setter Property="Background" Value="#0A84FF"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style>
+
+            <!-- Language list item -->
+            <Style x:Key="SettingsLanguageItemStyle" TargetType="ListBoxItem">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{DynamicResource SettingsTextForeground}"/>
+                <Setter Property="Padding" Value="8,5"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                    CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsListHover}"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#FF0A84FF"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Generic settings popup menu-item button -->
+            <Style x:Key="SettingsItemBtnStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{DynamicResource SettingsTextForeground}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Padding" Value="12,9"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                    CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#26FFFFFF"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#40FFFFFF"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!-- Outer border gives window a frame edge when WindowStyle=None -->
+    <Border x:Name="WindowBorder"
+            BorderBrush="{DynamicResource TitleBarBorderBrush}"
+            BorderThickness="1">
+        <Grid x:Name="MainGrid" Background="{DynamicResource BackgroundBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="TitleBarRow"  Height="36"/>
+                <RowDefinition x:Name="ToolbarRow"   Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  ROW 0 — Custom Title Bar                       -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <Grid Grid.Row="0"
+                  Background="{DynamicResource TitleBarBrush}"
+                  x:Name="TitleBarGrid">
+
+                <!-- Drag handle (the whole row except the buttons) -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Logo + App name + page title -->
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="12,0,0,0">
+                    <Image Source="apolion.ico" Width="18" Height="18" Margin="0,0,8,0"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock x:Name="TitleBarText"
+                               Text="Apolion"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource ForegroundBrush}"/>
+                </StackPanel>
+
+                <!-- Right: Window controls -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="BtnMinimize"
+                            Style="{StaticResource CaptionButtonStyle}"
+                            Content="&#xE921;"
+                            ToolTip="Minimize"
+                            Click="BtnMinimize_Click"/>
+                    <Button x:Name="BtnMaximize"
+                            Style="{StaticResource CaptionButtonStyle}"
+                            Content="&#xE922;"
+                            ToolTip="Maximize"
+                            Click="BtnMaximize_Click"/>
+                    <Button x:Name="BtnClose"
+                            Style="{StaticResource CloseButtonStyle}"
+                            Content="&#xE8BB;"
+                            ToolTip="Close"
+                            Click="BtnClose_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  ROW 1 — Navigation Toolbar                     -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <Border Grid.Row="1"
+                    x:Name="ToolbarBorder"
+                    Background="{DynamicResource BackgroundBrush}"
+                    BorderBrush="#333333"
+                    BorderThickness="0,0,0,1">
+                <Grid Margin="10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>  <!-- 0: Back -->
+                        <ColumnDefinition Width="Auto"/>  <!-- 1: Forward -->
+                        <ColumnDefinition Width="Auto"/>  <!-- 2: Refresh -->
+                        <ColumnDefinition Width="*"/>     <!-- 3: Address bar -->
+                        <ColumnDefinition Width="Auto"/>  <!-- 4: Zoom indicator -->
+                        <ColumnDefinition Width="Auto"/>  <!-- 5: Settings -->
+                        <ColumnDefinition Width="Auto"/>  <!-- 6: New Tab -->
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="BtnBack"    Grid.Column="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="40" Height="34" Click="BtnBack_Click"    ToolTip="Back"/>
+                    <Button x:Name="BtnForward" Grid.Column="1" Content="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="40" Height="34" Click="BtnForward_Click" ToolTip="Forward"/>
+                    <Button x:Name="BtnRefresh" Grid.Column="2" Content="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="40" Height="34" Click="BtnRefresh_Click" ToolTip="Refresh"/>
+
+                    <Border Grid.Column="3" Background="{DynamicResource AddressBarBackground}" CornerRadius="17" Margin="15,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="&#xE71B;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="14" Foreground="#888"
+                                       VerticalAlignment="Center" Margin="12,0,0,0"/>
+                            <TextBox x:Name="TxtAddress" Grid.Column="1"
+                                     Margin="10,0"
+                                     VerticalContentAlignment="Center"
+                                     Background="Transparent"
+                                     Foreground="{DynamicResource ForegroundBrush}"
+                                     BorderThickness="0"
+                                     FontSize="14"
+                                     KeyUp="TxtAddress_KeyUp"
+                                     CaretBrush="{DynamicResource ForegroundBrush}"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Zoom indicator: briefly visible when zooming, fades out -->
+                    <Border x:Name="ZoomIndicatorBorder" Grid.Column="4"
+                            Background="#33FFFFFF" CornerRadius="4"
+                            Padding="6,2" Margin="2,8"
+                            Visibility="Collapsed"
+                            VerticalAlignment="Center">
+                        <TextBlock x:Name="ZoomIndicatorText"
+                                   Text="100%"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource ForegroundBrush}"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <Button x:Name="BtnSettings" Grid.Column="5" Content="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="40" Height="34" Click="BtnSettings_Click" ToolTip="Settings"/>
+                    <Button x:Name="BtnNewTab"   Grid.Column="6" Content="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="16" Width="40" Height="34" Click="BtnNewTab_Click"   ToolTip="New Tab"/>
+                </Grid>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  ROW 2 — Tab strip + Layered Browser Content    -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <Grid x:Name="BrowserAreaGrid" Grid.Row="2" Margin="10,0,10,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Tab Headers (Infinite Tabs, Compressed) -->
+                <TabControl x:Name="BrowserContainer"
+                            Grid.Row="0"
+                            Padding="0"
+                            Margin="0,0,0,4"
+                            AllowDrop="True"
+                            SelectionChanged="BrowserContainer_SelectionChanged"
+                            SizeChanged="BrowserContainer_SizeChanged"
+                            Background="Transparent"
+                            BorderThickness="0">
+                    <TabControl.Template>
+                        <ControlTemplate TargetType="TabControl">
+                            <StackPanel Orientation="Horizontal" IsItemsHost="True" Background="Transparent"/>
+                        </ControlTemplate>
+                    </TabControl.Template>
+                </TabControl>
+
+                <!-- Drop insertion indicator overlay for tab reordering -->
+                <Canvas x:Name="TabDragOverlayCanvas" Grid.Row="0" IsHitTestVisible="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,4">
+                    <Border x:Name="TabInsertionIndicator"
+                            Width="3"
+                            CornerRadius="1.5"
+                            Background="#388BFD"
+                            Visibility="Collapsed"
+                            Height="30">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#388BFD" BlurRadius="6" ShadowDepth="0" Opacity="0.85"/>
+                        </Border.Effect>
+                    </Border>
+                </Canvas>
+
+                <!-- Layered Browser Controls (All HWNDs stay active; active is Visible, inactive are Hidden) -->
+                <Grid x:Name="BrowserLayerGrid" Grid.Row="1"/>
+            </Grid>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!--  Settings popup — anchored to BtnSettings gear icon              -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <Popup x:Name="SettingsPopup"
+                   PlacementTarget="{x:Reference BtnSettings}"
+                   Placement="Bottom"
+                   StaysOpen="False"
+                   AllowsTransparency="True"
+                   PopupAnimation="Fade"
+                   HorizontalOffset="-196"
+                   VerticalOffset="4">
+                <Border Background="{DynamicResource SettingsPopupBackground}"
+                        BorderBrush="{DynamicResource SettingsPopupBorder}"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Width="236"
+                        Padding="0">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="24" ShadowDepth="4" Opacity="0.65"/>
+                    </Border.Effect>
+                    <StackPanel Margin="6">
+
+                        <!-- ── Appearance ────────────────────────────── -->
+                        <TextBlock Text="APPEARANCE" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SettingsTextMuted}" Margin="6,8,6,5"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="BtnThemeLight" Grid.Column="0" Content="Light"
+                                    Style="{StaticResource ThemeSegBtnStyle}"
+                                    Click="BtnThemeLight_Click"/>
+                            <Button x:Name="BtnThemeDark" Grid.Column="2" Content="Dark"
+                                    Style="{StaticResource ThemeSegBtnStyle}"
+                                    Click="BtnThemeDark_Click"/>
+                        </Grid>
+                        <Border Height="1" Background="{DynamicResource SettingsPopupBorder}" Margin="0,0,0,4"/>
+
+                        <!-- ── Language ─────────────────────────────── -->
+                        <TextBlock Text="LANGUAGE" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SettingsTextMuted}" Margin="6,2,6,4"/>
+                        <Border Background="{DynamicResource SettingsListBackground}"
+                                BorderBrush="{DynamicResource SettingsPopupBorder}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Margin="6,0,6,0">
+                            <ListBox x:Name="LstLanguage"
+                                     MaxHeight="140"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="{DynamicResource SettingsTextForeground}"
+                                     ItemContainerStyle="{StaticResource SettingsLanguageItemStyle}"
+                                     DisplayMemberPath="DisplayName"
+                                     SelectionChanged="LstLanguage_SelectionChanged"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Border>
+                        <TextBlock Text="Preferred language for websites. Reload open pages to apply."
+                                   FontSize="10"
+                                   Foreground="{DynamicResource SettingsTextMuted}"
+                                   TextWrapping="Wrap"
+                                   Margin="8,5,8,4"/>
+                        <Border Height="1" Background="{DynamicResource SettingsPopupBorder}" Margin="0,0,0,4"/>
+
+                        <!-- ── Downloads ──────────────────────────── -->
+                        <StackPanel x:Name="SectionDownloads">
+                            <Button x:Name="BtnOpenDownloads" Style="{StaticResource SettingsItemBtnStyle}"
+                                    Click="BtnOpenDownloads_Click">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                               Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsTextMuted}"/>
+                                    <TextBlock Text="Downloads" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Border Height="1" Background="{DynamicResource SettingsPopupBorder}" Margin="0,4"/>
+                        </StackPanel>
+
+                        <!-- ── Cookies ────────────────────────────── -->
+                        <TextBlock Text="COOKIES" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SettingsTextMuted}" Margin="6,2,6,4"/>
+                        <Button x:Name="BtnClearCookies" Style="{StaticResource SettingsItemBtnStyle}"
+                                Click="BtnClearCookies_Click">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                           Margin="0,0,10,0" VerticalAlignment="Center" Foreground="#FF453A"/>
+                                <TextBlock Text="Clear All Cookies" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Border Height="1" Background="{DynamicResource SettingsPopupBorder}" Margin="0,4"/>
+
+                        <!-- ── Tabs Data ──────────────────────────── -->
+                        <TextBlock Text="TABS" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SettingsTextMuted}" Margin="6,2,6,4"/>
+                        <Button x:Name="BtnClearSavedTabs" Style="{StaticResource SettingsItemBtnStyle}"
+                                Click="BtnClearSavedTabs_Click">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                           Margin="0,0,10,0" VerticalAlignment="Center" Foreground="#FF9F0A"/>
+                                <TextBlock Text="Remove Saved Tabs Data" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Border Height="1" Background="{DynamicResource SettingsPopupBorder}" Margin="0,4"/>
+
+                        <!-- ── Developer ──────────────────────────── -->
+                        <StackPanel x:Name="SectionDeveloper">
+                            <TextBlock Text="DEVELOPER" FontSize="10" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource SettingsTextMuted}" Margin="6,2,6,4"/>
+                            <Border Padding="12,6,12,10">
+                                <Grid>
+                                    <TextBlock Text="Developer Tools" Foreground="{DynamicResource SettingsTextForeground}" FontSize="13"
+                                               VerticalAlignment="Center"/>
+                                    <ToggleButton x:Name="DevToolsToggle"
+                                                  HorizontalAlignment="Right"
+                                                  Style="{StaticResource PillToggleStyle}"
+                                                  Click="DevToolsToggle_Click"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- ── Diagnostics ────────────────────────── -->
+                        <StackPanel x:Name="SectionDiagnostics">
+                            <TextBlock Text="DIAGNOSTICS" FontSize="10" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource SettingsTextMuted}" Margin="6,2,6,4"/>
+                            <Button x:Name="BtnOpenLogsFolder" Style="{StaticResource SettingsItemBtnStyle}"
+                                    Click="BtnOpenLogsFolder_Click">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                               Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource SettingsTextMuted}"/>
+                                    <TextBlock Text="Open Debug &amp; Crash Logs" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+
+
+                    </StackPanel>
+                </Border>
+            </Popup>
+
+        </Grid>
+    </Border>
+</Window>

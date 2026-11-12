@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>apolion.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <Version>1.0.1</Version>
+    <!-- Disable auto-generated assembly info since we have explicit AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <!-- Add assembly references that are missing -->
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <!-- Omit unused .NET localization satellite assemblies (saves ~17.5 MB) -->
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CefSharp.WinForms.NETCore" Version="156.0.150" />
+    <PackageReference Include="CefSharp.Common" Version="156.0.150" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="apolion.ico" />
+    <None Update="EULA.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!-- Keep test and packaging sources out of the application build. -->
+    <Compile Remove="tests\**\*.cs" />
+    <Compile Remove="Apolion.Updater\**\*.cs" />
+    <None Remove="tests\**\*" />
+    <None Remove="tools\**\*" />
+    <None Remove="Apolion.Updater\**\*" />
+  </ItemGroup>
+
+  <Target Name="RenameSubprocess" AfterTargets="Build">
+    <Copy SourceFiles="$(OutputPath)CefSharp.BrowserSubprocess.exe" DestinationFiles="$(OutputPath)Apolion Helper.exe" SkipUnchangedFiles="true" ContinueOnError="true" />
+  </Target>
+
+  <!-- Strip unused Chromium optional dependencies and locales to cut disk space by ~92 MB -->
+  <Target Name="StripChromiumFootprint" AfterTargets="Build;RenameSubprocess">
+    <!-- 1. Remove WebGPU DirectX compiler (27.3 MB) -->
+    <Delete Files="$(OutputPath)dxcompiler.dll" ContinueOnError="true" />
+    <Delete Files="$(OutputPath)dxil.dll" ContinueOnError="true" />
+
+    <!-- 2. Remove SwANGLE software Vulkan (5.3 MB) -->
+    <Delete Files="$(OutputPath)vk_swiftshader.dll" ContinueOnError="true" />
+    <Delete Files="$(OutputPath)vk_swiftshader_icd.json" ContinueOnError="true" />
+    <Delete Files="$(OutputPath)vulkan-1.dll" ContinueOnError="true" />
+
+    <!-- 3. Strip all locales except en-US.pak (~41.7 MB) -->
+    <ItemGroup>
+      <_UnusedLocales Include="$(OutputPath)locales\*.pak" Exclude="$(OutputPath)locales\en-US.pak" />
+    </ItemGroup>
+    <Delete Files="@(_UnusedLocales)" ContinueOnError="true" />
+  </Target>
+
+  <!-- Framework references are implicitly included by UseWPF -->
+
+</Project>
