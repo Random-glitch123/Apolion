@@ -2,17 +2,39 @@
 
 See `Build.md` for all build tools and how-to instructions.
 
-## Problems to fix (ordered by importance)
-
-Standard Chrome download is overlayed over Apolion
-
-Instagram doesn't want show video. Image somewhere in gallery
-
-Look deeper into performance issues
-
 ---
 
-All code health issues have been addressed. See git history for details.
+## ✅ Completed Fixes
+
+### Code Health Issues (All Resolved)
+- **RAM leaks**: `_tabLastActive` cleanup in CloseTab/SleepTab, LRU favicon cache (256 entries), faulted task cleanup
+- **Timer leaks**: Stop all timers (`_zoomHideTimer`, `_tabWidthDebounceTimer`, `_tabSleepTimer`) on Window_Closing
+- **PowerModeManager**: Added `Stop()` call in `App.OnExit` to unsubscribe SystemEvents
+- **CefProfileSanitizer**: Runs async only (`PrepareForStartupAsync`) to avoid duplicate I/O
+- **LanguageManager**: Removed duplicate `Initialize()` call at startup
+- **AppLogger**: Buffered StreamWriter with periodic flush (2s) for performance
+- **RestoreSessionAsync**: Changed from `async void` to `async Task` with error handling
+- **_pendingClosedTabs**: Made per-window instance instead of static
+- **HttpClient timeout**: Increased from 10s to 30s for favicon downloads
+
+### Download System
+- **Chrome download overlay fixed**: DownloadHandler now synchronously completes callback before returning, preventing CEF native download UI
+- **File name sanitization**: Invalid chars replaced with underscore
+
+### Media/Instagram Support
+- **Proprietary codecs enabled**: H.264, AAC, MediaFoundation support
+- **User agent spoofing**: Realistic Chrome 156 UA for better site compatibility
+- **PictureInPicture enabled**: Removed from disable-features
+- **enable-media-stream**: Already enabled for mic/camera
+
+### Updater System
+- **Consolidated Updater.cs**: Merged 7 files into single Updater.cs
+- **Dedicated Apolion Updater.exe**: Built as self-contained single-file (~71 MB)
+- **Removed batch script fallback**: Now requires dedicated updater executable
+- **Build scripts updated**: Package-Release.ps1 and Build-Installer.ps1 include updater
+
+### Legal
+- **Removed GPL v3**: Conflicts with EULA. Kept proprietary EULA.md only.
 
 ---
 

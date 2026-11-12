@@ -271,7 +271,13 @@ namespace Apolion
 
             settings.PersistSessionCookies = true;
 
+            // Media / codec support for Instagram, YouTube, etc.
             settings.CefCommandLineArgs.Add("enable-media-stream");
+            settings.CefCommandLineArgs.Add("enable-proprietary-codecs");
+            settings.CefCommandLineArgs.Add("enable-features=MediaFoundationH264,MediaFoundationAAC,MediaFoundationAAC_ADTS,ProprietaryCodecs,HardwareMediaKeyHandling,PictureInPicture");
+
+            // User agent for better site compatibility (Instagram, etc.)
+            settings.CefCommandLineArgs.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36");
 
             // GPU / Rendering performance
             settings.CefCommandLineArgs.Add("num-raster-threads", "4");
@@ -354,7 +360,6 @@ namespace Apolion
 
             var disableFeatures = new System.Collections.Generic.List<string>
             {
-                "PictureInPicture",
                 "WebGPU",
                 "WebBluetooth",
                 "WebUSB",

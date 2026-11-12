@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using CefSharp;
+using WpfApplication = System.Windows.Application;
 
 namespace Apolion
 {
@@ -21,20 +23,21 @@ namespace Apolion
 
         public bool OnBeforeDownload(IWebBrowser chromiumWebBrowser, IBrowser browser, DownloadItem downloadItem, IBeforeDownloadCallback callback)
         {
-            // Always complete the callback exactly once. Leaving it pending lets
-            // CEF fall back to its own native Chrome download popup, which overlays Apolion.
+            // CRITICAL: Must complete the callback synchronously before returning
+            // to prevent CEF from showing its native Chrome download UI overlay.
             bool completed = false;
             try
             {
-                var app = System.Windows.Application.Current;
+                var app = WpfApplication.Current;
                 if (app == null || app.Dispatcher.HasShutdownStarted || app.Dispatcher.HasShutdownFinished)
                 {
-                    try { callback.Dispose(); completed = true; } catch { }
+                    SafeDisposeCallback(callback, ref completed);
                     return true;
                 }
 
                 // Run the Save File dialog synchronously on the UI thread so that
                 // callback.Continue is invoked before OnBeforeDownload returns.
+                // Use Invoke (not BeginInvoke) to block until the dialog completes.
                 app.Dispatcher.Invoke(() =>
                 {
                     if (completed || callback.IsDisposed) return;
@@ -42,7 +45,7 @@ namespace Apolion
                     {
                         var dlg = new Microsoft.Win32.SaveFileDialog
                         {
-                            FileName = downloadItem.SuggestedFileName,
+                            FileName = SanitizeFileName(downloadItem.SuggestedFileName),
                             Title = "Save File As..."
                         };
                         if (dlg.ShowDialog() == true)
@@ -53,30 +56,48 @@ namespace Apolion
                         else
                         {
                             // User cancelled: cancel the download instead of letting CEF show native UI.
-                            callback.Dispose();
-                            completed = true;
+                            SafeDisposeCallback(callback, ref completed);
                         }
                     }
                     catch (Exception ex)
                     {
                         AppLogger.Exception("OnBeforeDownload dialog", ex);
-                        try { callback.Dispose(); completed = true; } catch { }
+                        SafeDisposeCallback(callback, ref completed);
                     }
                 });
             }
             catch (Exception ex)
             {
                 AppLogger.Exception("OnBeforeDownload", ex);
-                try { callback.Dispose(); completed = true; } catch { }
+                SafeDisposeCallback(callback, ref completed);
             }
             finally
             {
                 if (!completed)
                 {
-                    try { callback.Dispose(); } catch { }
+                    SafeDisposeCallback(callback, ref completed);
                 }
             }
             return true;
+        }
+
+        private static void SafeDisposeCallback(IBeforeDownloadCallback callback, ref bool completed)
+        {
+            if (!completed)
+            {
+                try { callback.Dispose(); completed = true; } catch { }
+            }
+        }
+
+        private static string SanitizeFileName(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+                return "download";
+            
+            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+                fileName = fileName.Replace(c, '_');
+            
+            return fileName;
         }
 
         public void OnDownloadUpdated(IWebBrowser chromiumWebBrowser, IBrowser browser, DownloadItem downloadItem, IDownloadItemCallback callback)
