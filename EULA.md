@@ -10,115 +10,112 @@ By downloading, installing, accessing, or using Apolion Browser ("Software"), yo
 
 ---
 
-## 1. License Grant
+## 1. Ownership
 
-Apolion Browser is provided free of charge for personal, non-commercial use.
+Zdenek Skula ("Creator") owns all right, title, and interest in and to the Software, including:
 
-The Creator grants you a personal, non-exclusive, non-transferable, non-sublicensable, and revocable license to:
+- The source code and object code
+- All associated files, assets, and documentation
+- All trademarks, trade names, and logos
+- All intellectual property rights worldwide
 
-- Install and use the Software on devices you own or control
-- Use the Software for lawful purposes only
-
-The Software is **licensed, not sold**. All ownership, title, and intellectual property rights in and to the Software remain the exclusive property of the Creator.
+The Software is **licensed, not sold**. No ownership is transferred to you.
 
 ---
 
-## 2. Restrictions
+## 2. License Grant (Personal Use Only)
+
+The Creator grants you a personal, non-exclusive, non-transferable, revocable license to:
+
+- Install and run the Software on devices you own or control
+- Use the Software for personal, non-commercial purposes
+- Make copies of the Software solely for your own personal use
+
+This license does **not** include the right to:
+
+- Sell the Software or any modified version of it
+- License, sublicense, rent, lease, or lend the Software to others
+- Distribute the Software commercially (including as part of a paid product or service)
+- Use the Software as part of a service offering (SaaS, hosted browser, etc.)
+
+---
+
+## 3. Forking and Modification (Attribution Required)
+
+You may fork, modify, or create derivative works of the Software **only if** all of the following conditions are met:
+
+1. **Attribution**: You must give obvious credit to Zdenek Skula as the original author. This credit must be displayed prominently in:
+   - The application's About dialog or equivalent
+   - Any documentation accompanying your fork
+   - Any repository or distribution where your fork is published
+   
+   Example: `"Based on Apolion Browser by Zdenek Skula (https://github.com/Random-glitch123/Apolion)"`
+
+2. **No Commercial Use**: Your fork may not be sold, monetized, or used in any commercial product or service.
+
+3. **Same License**: Your fork must remain under these same terms. You may not re-license your fork under a different license (including GPL, MIT, Apache, or any other open-source license).
+
+4. **No Trademark Use**: You may not use the name "Apolion", the Apolion logo, or any similar branding in your fork without separate written permission. You must use a different name for your fork.
+
+---
+
+## 4. Distribution
+
+You may not distribute the Software (original or modified) except as expressly permitted in Section 3 with proper attribution and without commercial use.
+
+Any authorized distribution must include this EULA without modification.
+
+---
+
+## 5. Open Source Components
+
+The Software includes third-party open-source components (including Chromium Embedded Framework / CefSharp). Those components remain subject to their respective open-source licenses.
+
+Nothing in this Agreement limits your rights under those component licenses. In the event of a conflict, the component's license governs that component only.
+
+Source code for open-source components is available upon request or at the locations specified in their documentation.
+
+---
+
+## 6. Restrictions
 
 You may not:
 
-- Redistribute, sell, rent, lease, or sublicense the Software
-- Distribute the Software as part of any commercial product or service
-- Modify, adapt, translate, or create derivative works of the Software
 - Decompile, disassemble, reverse engineer, or attempt to derive source code
-- Remove, obscure, or alter any proprietary notices, labels, or marks
-- Use the Software to violate any applicable law or regulation
+- Remove, obscure, or alter any copyright, trademark, or proprietary notices
+- Use the Software for unlawful, malicious, harmful, or fraudulent purposes
+- Use the Software to scrape, harvest, or collect data in violation of any website's terms of service
 - Use the Software to develop competing products or services
 
 ---
 
-## 3. Updates and Upgrades
+## 7. Updates
 
-The Creator may provide updates, patches, or upgrades to the Software at its sole discretion. Any such updates are considered part of the Software and are subject to this Agreement.
-
-The Creator is not obligated to provide updates, support, or maintenance.
+The Creator may provide updates at its sole discretion and is not obligated to provide support, maintenance, or updates.
 
 ---
 
-## 4. Open Source Components
+## 8. Disclaimer of Warranties
 
-The Software includes third-party open-source components (including but not limited to Chromium Embedded Framework / CefSharp). Such components are subject to their respective open-source licenses, which are included with the Software distribution.
-
-Nothing in this Agreement limits your rights under those open-source licenses. In the event of a conflict, the open-source license terms govern the respective component.
-
-Source code for open-source components, where required by their licenses, is available upon request or at the locations specified in the component documentation.
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. THE CREATOR DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
 ---
 
-## 5. Acceptable Use
+## 9. Limitation of Liability
 
-You agree not to use the Software:
-
-- For any unlawful, malicious, harmful, or fraudulent purpose
-- To transmit viruses, malware, or other harmful code
-- To circumvent security measures of any system or service
-- To scrape, harvest, or collect data from websites in violation of their terms of service
-
-The Creator may terminate your license immediately upon any material violation of this Agreement.
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE CREATOR SHALL NOT BE LIABLE FOR ANY DAMAGES ARISING FROM YOUR USE OF OR INABILITY TO USE THE SOFTWARE.
 
 ---
 
-## 6. Privacy
+## 10. Termination
 
-The Software may collect anonymous usage statistics and crash reports to improve performance and stability. No personally identifiable information is collected without your consent.
-
-For more information, see the Software's privacy settings and documentation.
+This Agreement is effective until terminated. The Creator may terminate your license immediately if you violate any term. Upon termination, you must cease all use and destroy all copies.
 
 ---
 
-## 7. Disclaimer of Warranties
+## 11. Governing Law
 
-THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, SECURITY, OR RELIABILITY.
-
-THE CREATOR DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, UNINTERRUPTED, OR FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.
-
-YOU USE THE SOFTWARE AT YOUR OWN RISK.
-
----
-
-## 8. Limitation of Liability
-
-TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE CREATOR SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, OR USE, INCURRED BY YOU OR ANY THIRD PARTY, WHETHER IN AN ACTION IN CONTRACT OR TORT, EVEN IF THE CREATOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-THE CREATOR'S TOTAL LIABILITY ARISING OUT OE RELATED TO THIS AGREEMENT SHALL NOT EXCEED THE AMOUNT YOU PAID FOR THE SOFTWARE (IF ANY).
-
----
-
-## 9. Termination
-
-This Agreement is effective until terminated. The Creator may terminate this Agreement at any time without notice if you fail to comply with any term.
-
-Upon termination, you must cease all use of the Software and destroy all copies in your possession.
-
----
-
-## 10. Governing Law
-
-This Agreement is governed by the laws of the Netherlands, without regard to conflict-of-law principles.
-
-Any disputes arising from this Agreement shall be subject to the exclusive jurisdiction of the competent courts of The Hague, Netherlands.
-
----
-
-## 11. Severability
-
-If any provision of this Agreement is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary, and the remaining provisions shall continue in full force and effect.
-
----
-
-## 12. Entire Agreement
-
-This Agreement constitutes the entire agreement between you and the Creator regarding the use of the Software and supersedes all prior or contemporaneous communications, proposals, or representations, whether oral or written.
+This Agreement is governed by the laws of the Netherlands. Disputes are subject to the exclusive jurisdiction of the courts of The Hague, Netherlands.
 
 ---
 
