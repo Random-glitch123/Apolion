@@ -16,6 +16,11 @@ namespace Apolion
                 // Apply the chosen website language before any page script can read
                 // navigator.language / navigator.languages.
                 frame.ExecuteJavaScriptAsync(LanguageManager.NavigatorOverrideScript);
+
+#if DEBUG
+                // Debug builds only: capture HTMLMediaElement failures for diagnosis.
+                MediaDiagnostics.ObserveFrame(frame);
+#endif
             }
             catch (Exception ex)
             {

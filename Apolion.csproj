@@ -28,8 +28,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.WinForms.NETCore" Version="156.0.150" />
-    <PackageReference Include="CefSharp.Common" Version="156.0.150" />
+    <!-- CefSharp 154.0.340 maps exactly to CEF 154.0.34, for which a
+         proprietary-codec build (H.264/AAC) is available. See Build.md. -->
+    <PackageReference Include="CefSharp.WinForms.NETCore" Version="154.0.340" />
+    <PackageReference Include="CefSharp.Common" Version="154.0.340" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +67,39 @@
       <_UnusedLocales Include="$(OutputPath)locales\*.pak" Exclude="$(OutputPath)locales\en-US.pak" />
     </ItemGroup>
     <Delete Files="@(_UnusedLocales)" ContinueOnError="true" />
+  </Target>
+
+  <!--
+    CefSharp's stock CEF binaries are built without proprietary codecs, so
+    H.264/AAC media cannot play (Instagram, YouTube, most MP4 sites). The
+    tools\Fetch-CefCodecs.ps1 script downloads a byte-compatible CEF 154.0.34
+    build compiled with proprietary_codecs=true and ffmpeg_branding=Chrome.
+    Copy its files over the official runtime after the footprint strip.
+  -->
+  <Target Name="ApplyCodecEnabledCef" AfterTargets="StripChromiumFootprint">
+    <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)\third_party\cef-codecs\libcef.dll')">
+      <_CefCodecFiles Include="$(MSBuildProjectDirectory)\third_party\cef-codecs\**\*" />
+    </ItemGroup>
+    <Copy Condition="'@(_CefCodecFiles)' != ''"
+          SourceFiles="@(_CefCodecFiles)"
+          DestinationFiles="@(_CefCodecFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+    <Message Condition="'@(_CefCodecFiles)' != ''"
+             Importance="high"
+             Text="Applied codec-enabled CEF runtime (H.264/AAC)." />
+    <Warning Condition="!Exists('$(MSBuildProjectDirectory)\third_party\cef-codecs\libcef.dll')"
+             Text="Codec-enabled CEF runtime not found. Run tools\Fetch-CefCodecs.ps1, otherwise Instagram/YouTube H.264 videos will not play." />
+  </Target>
+
+  <!-- dotnet publish builds its own file list, so apply the runtime there too. -->
+  <Target Name="ApplyCodecEnabledCefPublish" AfterTargets="Publish">
+    <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)\third_party\cef-codecs\libcef.dll')">
+      <_CefCodecPublishFiles Include="$(MSBuildProjectDirectory)\third_party\cef-codecs\**\*" />
+    </ItemGroup>
+    <Copy Condition="'@(_CefCodecPublishFiles)' != ''"
+          SourceFiles="@(_CefCodecPublishFiles)"
+          DestinationFiles="@(_CefCodecPublishFiles->'$(PublishDir)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
   </Target>
 
   <!-- Framework references are implicitly included by UseWPF -->

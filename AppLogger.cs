@@ -31,6 +31,14 @@ namespace Apolion
         private static ThreadingTimer? _flushTimer;
         private const int FlushIntervalMs = 2000; // Flush every 2 seconds
 
+#if DEBUG
+        // Debug builds write diagnostics immediately so logs are never lost in the
+        // buffer when a media/renderer failure hangs or kills the process.
+        private const bool AutoFlushLog = true;
+#else
+        private const bool AutoFlushLog = false;
+#endif
+
         /// <summary>Set APOLION_DEBUG=1 to include verbose DEBUG lines.</summary>
         public static bool Verbose { get; } =
             string.Equals(Environment.GetEnvironmentVariable("APOLION_DEBUG"), "1", StringComparison.OrdinalIgnoreCase);
@@ -56,11 +64,10 @@ namespace Apolion
                     Rotate(force: true);
                     RotateCefLogIfNeeded();
 
-                    // Open buffered writer for debug log
-                    _debugWriter = new StreamWriter(_debugLogPath, append: true, Utf8, bufferSize: 4096)
-                    {
-                        AutoFlush = false // We'll flush manually
-                    };
+                    // Rotate opens the writer itself when it moved an existing log.
+                    // Opening a second writer here would fail (the first one holds
+                    // the file) and silently skip the flush timer.
+                    _debugWriter ??= OpenDebugWriter();
 
                     // Start periodic flush timer
                     _flushTimer = new ThreadingTimer(_ => FlushDebugLog(), null, FlushIntervalMs, FlushIntervalMs);
@@ -162,6 +169,9 @@ namespace Apolion
             }
         }
 
+        /// <summary>Flushes buffered log lines. Safe to call at any time.</summary>
+        public static void Flush() => FlushDebugLog();
+
         private static void Rotate(bool force)
         {
             try
@@ -186,15 +196,20 @@ namespace Apolion
                 File.Move(_debugLogPath!, oldPath);
 
                 // Reopen writer for new log file
-                _debugWriter = new StreamWriter(_debugLogPath!, append: true, Utf8, bufferSize: 4096)
-                {
-                    AutoFlush = false
-                };
+                _debugWriter = OpenDebugWriter();
             }
             catch
             {
                 // Ignore rotation failures.
             }
+        }
+
+        private static StreamWriter OpenDebugWriter()
+        {
+            return new StreamWriter(_debugLogPath!, append: true, Utf8, bufferSize: 4096)
+            {
+                AutoFlush = AutoFlushLog // Debug flushes each line; Release flushes on the timer
+            };
         }
 
         private static void RotateCefLogIfNeeded()

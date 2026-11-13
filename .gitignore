@@ -24,6 +24,9 @@ appsettings.*.json
 # click-popup-test.html
 # popup-test.html
 
+# Downloaded CEF runtime with proprietary codecs (tools\Fetch-CefCodecs.ps1)
+third_party/cef-codecs/
+
 # NuGet packages (restored automatically)
 packages/
 

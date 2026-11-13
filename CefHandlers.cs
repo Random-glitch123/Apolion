@@ -594,6 +594,14 @@ namespace Apolion
             // Disabled: global CEF preference "intl.accept_languages" (set via
             // LanguageManager.ApplyLive()) handles Accept-Language for all requests.
             // Returning null avoids allocating a handler per request.
+#if DEBUG
+            // Debug builds only: trace media/CDN requests to diagnose playback failures.
+            var diagnosticHandler = MediaDiagnostics.CreateRequestHandler(request);
+            if (diagnosticHandler != null)
+            {
+                return diagnosticHandler;
+            }
+#endif
             return null;
         }
 

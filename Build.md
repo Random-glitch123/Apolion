@@ -17,6 +17,58 @@ This document covers every build step, what each tool produces, and how to make 
 - Inno Setup 5 or 6 (`ISCC.exe` on PATH or installed to Program Files) — only needed for the installer `.exe`, not for the portable zip.
 - GitHub CLI (`gh`) — optional, only if you want to upload releases from the command line.
 
+## Codec-enabled CEF runtime (required for video)
+
+CefSharp's stock CEF binaries are built without proprietary codecs, so H.264/AAC
+video (Instagram, YouTube, most MP4 sites) cannot play. Apolion therefore uses a
+codec-enabled CEF runtime that is byte-compatible with CefSharp 154.0.340:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\Fetch-CefCodecs.ps1
+```
+
+The script downloads a pinned CEF `154.0.34` build (compiled with
+`proprietary_codecs=true` and `ffmpeg_branding="Chrome"`), verifies its SHA-256,
+and extracts the required files to `third_party\cef-codecs\`. That folder is
+ignored by git; run the script once per clone. If it is missing, the build emits
+a warning and video playback will fail with "Sorry, we're having trouble playing
+this video."
+
+`Apolion.csproj` copies the runtime into the build output
+(`ApplyCodecEnabledCef`) and into `dotnet publish` output
+(`ApplyCodecEnabledCefPublish`). Keep the `CefSharp.*` package versions at
+`154.0.340` when updating the runtime: CEF, CefSharp and the codec build must all
+match.
+
+> **Licensing:** H.264/AAC are covered by patent pools and this third-party CEF
+> build ships without a patent license. Review the upstream project and your
+> obligations before redistributing Apolion. See
+> `third_party\cef-codecs\PROVENANCE.txt` after running the script.
+
+### Debug media diagnostics
+
+Debug builds include `MediaDiagnostics` (compiled out of Release via `#if DEBUG`).
+It logs codec probes, `<video>` playback state and media failures to
+`%LOCALAPPDATA%\Apolion\Logs\debug.log` with `[MEDIA-DIAG]`, `[MEDIA-STATE]` and
+`[MEDIA-ERROR]` prefixes. To inspect a live page through the Chrome DevTools
+Protocol:
+
+```powershell
+$env:APOLION_MEDIA_DEBUG = '1'
+dotnet run -c Debug
+# then open http://127.0.0.1:9222/json
+```
+
+Release builds contain none of these strings or hooks.
+
+### Build configurations
+
+`dotnet build -c <name>` accepts any configuration name. `Debug` and `Release`
+are conventions, not an enum: only the `Debug` configuration defines the
+`DEBUG` compiler symbol. A name such as `Test` still builds successfully; it
+outputs to `bin\Test` and does not define `DEBUG`, so the media diagnostics above
+are absent. Release additionally disables PDB generation in `Apolion.csproj`.
+
 ## 1. Portable zip (existing flow — unchanged)
 
 ```powershell

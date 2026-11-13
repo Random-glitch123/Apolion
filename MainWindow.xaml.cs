@@ -1877,6 +1877,10 @@ namespace Apolion
                 Dock = System.Windows.Forms.DockStyle.Fill
             };
 
+#if DEBUG
+            MediaDiagnostics.Attach(browser);
+#endif
+
             var downloadHandler = new ApolionDownloadHandler();
             downloadHandler.DownloadUpdated += (id, fileName, received, total, speed, isComplete, isCancelled) =>
             {

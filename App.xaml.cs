@@ -272,12 +272,14 @@ namespace Apolion
             settings.PersistSessionCookies = true;
 
             // Media / codec support for Instagram, YouTube, etc.
+            // H.264/AAC are a compile-time property of CEF/FFmpeg. Apolion uses the
+            // codec-enabled CEF runtime fetched by tools\Fetch-CefCodecs.ps1 (see
+            // Build.md); these switches enable capture streams and hardware decode.
             settings.CefCommandLineArgs.Add("enable-media-stream");
-            settings.CefCommandLineArgs.Add("enable-proprietary-codecs");
-            settings.CefCommandLineArgs.Add("enable-features=MediaFoundationH264,MediaFoundationAAC,MediaFoundationAAC_ADTS,ProprietaryCodecs,HardwareMediaKeyHandling,PictureInPicture");
 
-            // User agent for better site compatibility (Instagram, etc.)
-            settings.CefCommandLineArgs.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36");
+            // Keep the UA version in sync with the actual Chromium build. Sites
+            // (Instagram in particular) compare it against the JS engine version.
+            settings.CefCommandLineArgs.Add("user-agent", $"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{GetUserAgentChromiumVersion()} Safari/537.36");
 
             // GPU / Rendering performance
             settings.CefCommandLineArgs.Add("num-raster-threads", "4");
@@ -323,7 +325,14 @@ namespace Apolion
                 "ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIFrame",
                 "IntensiveWakeUpThrottling",
                 "CalculateNativeWinOcclusion",
-                "DnsOverHttps<DoHTrial"
+                "DnsOverHttps<DoHTrial",
+                // Media features must live in the single --enable-features switch;
+                // a second switch with the same name would simply overwrite this one.
+                "MediaFoundationH264",
+                "MediaFoundationAAC",
+                "MediaFoundationAAC_ADTS",
+                "HardwareMediaKeyHandling",
+                "PictureInPicture"
             };
 
             settings.CefCommandLineArgs.Add("host-resolver-rules",
@@ -393,11 +402,52 @@ namespace Apolion
                 ? helperPath
                 : Path.Combine(cefSharpFolder, "CefSharp.BrowserSubprocess.exe");
 
+#if DEBUG
+            // Opt-in Chrome DevTools Protocol endpoint for media debugging:
+            //   set APOLION_MEDIA_DEBUG=1, then open http://127.0.0.1:9222/json
+            // Debug-only and off by default; Release builds never contain this.
+            if (string.Equals(Environment.GetEnvironmentVariable("APOLION_MEDIA_DEBUG"), "1", StringComparison.OrdinalIgnoreCase))
+            {
+                settings.CefCommandLineArgs.Add("remote-debugging-port", "9222");
+                settings.CefCommandLineArgs.Add("remote-allow-origins", "*");
+            }
+
+            // Debug builds only: record the exact switches handed to Chromium.
+            // Release builds never emit this (and never include the string literals).
+            AppLogger.Info("[MEDIA-DIAG] CEF args: " + string.Join(" ", settings.CefCommandLineArgs.Select(kv =>
+                string.IsNullOrEmpty(kv.Value) ? "--" + kv.Key : "--" + kv.Key + "=" + kv.Value)));
+#endif
+
             Cef.Initialize(settings);
             AppLogger.Info("CEF initialized successfully");
 
             // Keep navigator.language and accept-language in sync
             LanguageManager.ApplyLive();
+        }
+
+        /// <summary>
+        /// Major Chromium version for the User-Agent string, formatted as
+        /// "major.0.0.0". Prefers the native libcef version and falls back to the
+        /// CefSharp assembly major (CefSharp's major tracks Chromium's) without
+        /// touching native code.
+        /// </summary>
+        private static string GetUserAgentChromiumVersion()
+        {
+            try
+            {
+                string major = Cef.ChromiumVersion.Split('.', 2)[0];
+                if (int.TryParse(major, out int parsed) && parsed > 0)
+                {
+                    return $"{parsed}.0.0.0";
+                }
+            }
+            catch
+            {
+                // Cef.ChromiumVersion calls into libcef; not safe in every context.
+            }
+
+            int fallbackMajor = typeof(Cef).Assembly.GetName().Version?.Major ?? 154;
+            return $"{fallbackMajor}.0.0.0";
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -410,6 +460,7 @@ namespace Apolion
             {
                 Thread.Sleep(TimeSpan.FromSeconds(15));
                 AppLogger.Error("Shutdown timeout reached - forcing process exit");
+                AppLogger.Flush();
                 try { Environment.Exit(0); } catch { }
             })
             {
@@ -540,6 +591,7 @@ namespace Apolion
             });
 
             AppLogger.Info($"=== Exit complete: {shutdownStopwatch.ElapsedMilliseconds}ms ===");
+            AppLogger.Flush();
             base.OnExit(e);
         }
 

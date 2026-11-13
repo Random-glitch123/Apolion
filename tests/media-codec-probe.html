@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Apolion media codec probe</title>
+<style>
+  body { background: #0d1117; color: #e6edf3; font: 14px/1.5 Segoe UI, sans-serif; padding: 24px; }
+  h1 { font-size: 18px; }
+  pre { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; overflow: auto; }
+  .pass { color: #3fb950; } .fail { color: #f85149; }
+</style>
+</head>
+<body>
+<h1>Apolion media codec probe</h1>
+<p id="summary">Running…</p>
+<video id="sample" controls muted playsinline width="480"></video>
+<pre id="output"></pre>
+<script>
+(async function () {
+  const types = {
+    h264_aac_mp4: 'video/mp4; codecs="avc1.42E01E,mp4a.40.2"',
+    h264_mp4: 'video/mp4; codecs="avc1.42E01E"',
+    aac_mp4: 'audio/mp4; codecs="mp4a.40.2"',
+    vp9_opus_webm: 'video/webm; codecs="vp9,opus"',
+    av1_mp4: 'video/mp4; codecs="av01.0.05M.08"'
+  };
+  const video = document.createElement('video');
+  const result = {
+    url: location.href,
+    ua: navigator.userAgent,
+    mse: typeof MediaSource !== 'undefined',
+    canPlayType: {},
+    isTypeSupported: {}
+  };
+  for (const [key, type] of Object.entries(types)) {
+    result.canPlayType[key] = video.canPlayType(type) || 'no';
+    result.isTypeSupported[key] = result.mse ? MediaSource.isTypeSupported(type) : false;
+  }
+  console.log('[MEDIA-PROBE] ' + JSON.stringify(result));
+  document.getElementById('output').textContent = JSON.stringify(result, null, 2);
+
+  const h264Ok = result.isTypeSupported.h264_aac_mp4 || result.canPlayType.h264_aac_mp4 !== 'no';
+  document.getElementById('summary').innerHTML = h264Ok
+    ? '<span class="pass">H.264/AAC appears supported</span>'
+    : '<span class="fail">H.264/AAC is NOT supported by this CEF build</span>';
+
+  const sample = document.getElementById('sample');
+  const source = new URLSearchParams(location.search).get('video');
+  if (source) {
+    sample.src = source;
+    sample.addEventListener('error', () => {
+      const detail = {
+        event: 'video-error',
+        src: sample.currentSrc || sample.src,
+        code: sample.error ? sample.error.code : null,
+        message: sample.error ? sample.error.message : null
+      };
+      console.log('[MEDIA-ERROR] ' + JSON.stringify(detail));
+      document.getElementById('output').textContent += '\n\n' + JSON.stringify(detail, null, 2);
+    });
+    sample.play().catch(err => {
+      console.log('[MEDIA-ERROR] ' + JSON.stringify({ event: 'play-rejected', name: err.name, message: err.message }));
+    });
+  }
+})();
+</script>
+</body>
+</html>
