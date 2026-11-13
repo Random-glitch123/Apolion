@@ -1,10 +1,10 @@
 # End User License Agreement (EULA)
 
-## Apolion Browserâ„¢
+## Apolion Browser
 
-**Apolion Browserâ„¢** is a trademark of Zdenek Skula.
+**Apolion Browser** is a trademark of Zdenek Skula.
 
-Â© 2026 Zdenek Skula. All Rights Reserved.
+2026 Zdenek Skula. All Rights Reserved.
 
 By downloading, installing, accessing, or using Apolion Browser ("Software"), you agree to the terms of this Agreement. If you do not agree, do not use the Software.
 
