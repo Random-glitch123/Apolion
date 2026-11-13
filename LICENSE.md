@@ -1,55 +1,50 @@
-# Apolion Browser License
+# Apolion Browser â€” Free Source License
 
 ## Copyright
 
 Â© 2026 Zdenek Skula. All Rights Reserved.
 
-**Apolion Browser** is free of charge and the source code is available, but it is **not** licensed under an OSI-approved open-source license. It is proprietary software owned by Zdenek Skula ("the Author").
+Apolion Browser is **free of charge**. No payment is required to download, use, or share it.
 
 ---
 
-## 1. You May
+## You May
 
-- Download, install, and use Apolion Browser free of charge for personal, non-commercial use
-- Fork, modify, and create derivative works of the source code
-- Share your forks and modifications with others, free of charge
+- Download, install, and use Apolion Browser for free
+- Fork, modify, and share the source code with others
+- Use it for personal or non-commercial purposes
 
-## 2. Conditions
+---
 
-If you fork, modify, or distribute Apolion Browser (or any derivative work), you **must**:
+## Conditions
 
-1. **Give obvious credit** to Zdenek Skula as the original author. This credit must appear prominently in:
-   - The application's About dialog or equivalent
-   - Any documentation accompanying your fork
-   - Any repository or distribution where your fork is published
+If you fork or share Apolion Browser (or any modified version), you **must**:
+
+1. **Give obvious credit** to Zdenek Skula as the original author, in a visible place such as:
+   - The application's About dialog
+   - Any documentation or README
+   - Any repository where your fork is published
 
    Example:
    > Based on Apolion Browser by Zdenek Skula (https://github.com/Random-glitch123/Apolion)
 
-2. **Keep this license** â€” You may not re-license your fork under a different license (including GPL, MIT, Apache, or any other open-source or proprietary license)
+2. **Do not sell it** â€” You may not sell Apolion Browser, any fork, or any derivative work, for any amount of money.
 
-3. **Do not use the name "Apolion"** or the Apolion logo in your fork without separate written permission. Use a different name.
+3. **Do not re-license it** â€” Your fork must remain under these same terms. You may not apply a different license (GPL, MIT, Apache, etc.) to it.
 
-## 3. You May NOT
+4. **Do not use the "Apolion" name or logo** in your fork without separate written permission.
 
-- Sell Apolion Browser, any fork, or any derivative work
-- License, sublicense, rent, lease, or lend Apolion Browser to others
-- Use Apolion Browser as part of a commercial product or service (including SaaS, hosted browsers, or paid offerings)
-- Remove, obscure, or alter any copyright, trademark, or proprietary notices
-- Use Apolion Browser for unlawful, malicious, or fraudulent purposes
-- Decompile, disassemble, or reverse engineer the compiled binaries
+---
 
-## 4. Open Source Components
+## Open Source Components
 
-Apolion Browser includes third-party open-source components (including Chromium Embedded Framework / CefSharp). Those components remain subject to their respective licenses. Nothing in this license limits your rights under those component licenses, but the Author's code and the overall application remain subject to this license.
+Apolion Browser includes third-party components (Chromium / CefSharp) that remain under their own licenses. Nothing here changes those components' terms.
 
-## 5. No Warranty
+---
 
-Apolion Browser is provided "as is" without warranty of any kind. The Author is not liable for any damages arising from your use of the software.
+## No Warranty
 
-## 6. Termination
-
-If you violate any term of this license, your rights under this license terminate immediately. You must stop using and distributing Apolion Browser and all forks.
+Apolion Browser is provided "as is" with no warranty. The author is not liable for any damages from using it.
 
 ---
 
